@@ -14,7 +14,7 @@
     <div class="container">
         <h1 class="text-center">Регистрация</h1>
         <div class="col-sm-5 mx-auto">
-            <form action="/reg" method="post">
+            <form onsubmit="sendForm(this); return false;">
                 <div class="mb-3">
                     <input name="name" type="text" class="form-control" placeholder="Имя">
                 </div>
@@ -23,6 +23,7 @@
                 </div>
                 <div class="mb-3">
                     <input name="email" type="email" class="form-control" placeholder="Email">
+                    <p id="info" style="color:red" hidden>Такой пользователь уже существует</p>
                 </div>
                 <div class="mb-3">
                     <input name="pass" type="password" class="form-control" placeholder="Пароль">
@@ -34,5 +35,21 @@
         </div>
     </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script>
+    function sendForm(form){
+        const formData = new FormData(form);
+        fetch('/reg', {
+            method: "POST",
+            body: formData
+        }).then(response=>response.json())
+            .then(result=>{
+                if(result.result === "user_exist"){
+                    info.hidden = false;
+                }else if(result.result === "success"){
+                    location.href = "/login.html";
+                }
+            })
+    }
+</script>
 </body>
 </html>
